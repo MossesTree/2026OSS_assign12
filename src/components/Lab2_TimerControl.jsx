@@ -6,13 +6,22 @@ export default function Lab2TimerControl() {
   const [running, setRunning] = useState(false);
 
   useEffect(() => {
-    // TODO 1: running이 false면 타이머를 만들지 않기
-    // TODO 2: running이 true면 setInterval로 1초마다 count 증가
-    // TODO 3: Cleanup에서 clearInterval 호출
+    // running이 false면 타이머를 만들지 않는다
+    if (!running) return;
+
+    // running이 true일 때만 1초마다 count 증가
+    const id = setInterval(() => {
+      setCount(prev => prev + 1);
+    }, 1000);
+
+    // running이 바뀌거나 컴포넌트가 사라질 때 타이머 정리
+    return () => clearInterval(id);
   }, [running]);
 
   const reset = () => {
-    // TODO 4: 타이머를 멈추고 count를 0으로 초기화
+    // running을 false로 바꾸면 Cleanup이 타이머를 멈춘다
+    setRunning(false);
+    setCount(0);
   };
 
   return (
