@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
 
+// 초 단위 count를 mm:ss 형식으로 바꾼다 (예: 75 → 01:15)
+const formatTime = (sec) =>
+  `${String(Math.floor(sec / 60)).padStart(2, '0')}:${String(sec % 60).padStart(2, '0')}`;
+
 // LAB 2 (Slide 10): Timer Start / Stop / Reset
 export default function Lab2TimerControl() {
   const [count, setCount] = useState(0);
@@ -26,8 +30,10 @@ export default function Lab2TimerControl() {
 
   return (
     <div>
-      <p className="status">상태: {running ? 'Running' : 'Stopped'}</p>
-      <div className="count">{count}</div>
+      <p className={running ? 'status running' : 'status'}>
+        상태: {running ? '● Running' : '■ Stopped'}
+      </p>
+      <div className="count">{formatTime(count)}</div>
       <div className="controls">
         <button onClick={() => setRunning(true)} disabled={running}>Start</button>
         <button className="secondary" onClick={() => setRunning(false)} disabled={!running}>Stop</button>
