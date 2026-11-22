@@ -4,25 +4,33 @@ import { useEffect, useRef, useState } from 'react';
 export default function Lab4RefTimer() {
   const [count, setCount] = useState(0);
   const [running, setRunning] = useState(false);
-  // TODO 1: 타이머 ID를 유지할 timerRef 생성 (초기값 null)
+  // 타이머 ID는 화면에 보일 필요가 없으므로 ref에 보관한다
+  const timerRef = useRef(null);
 
   const start = () => {
-    // TODO 2: timerRef.current에 타이머가 있으면 중복 시작 방지
-    // TODO 3: setInterval의 반환 ID를 timerRef.current에 보관
-    // TODO 4: 1초마다 count 증가, running을 true로 변경
+    // 이미 타이머가 있으면 새로 만들지 않는다 (중복 실행 방지)
+    if (timerRef.current !== null) return;
+
+    timerRef.current = setInterval(() => {
+      setCount(prev => prev + 1);
+    }, 1000);
+    setRunning(true);
   };
 
   const stop = () => {
-    // TODO 5: clearInterval로 타이머 중지
-    // TODO 6: timerRef.current를 null로, running은 false로 변경
+    clearInterval(timerRef.current);
+    timerRef.current = null;
+    setRunning(false);
   };
 
   const reset = () => {
-    // TODO 7: stop() 실행 후 count를 0으로 초기화
+    stop();
+    setCount(0);
   };
 
   useEffect(() => {
-    // TODO 8: 언마운트 시 Interval을 정리하는 Cleanup 작성
+    // 컴포넌트가 사라질 때 남아 있는 타이머를 정리한다
+    return () => clearInterval(timerRef.current);
   }, []);
 
   return (
